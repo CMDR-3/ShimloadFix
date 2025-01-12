@@ -88,5 +88,6 @@ I recommend just manually downloading a mod (i.e. VM2) and looking at how it's s
 - [ ] Working logging console
 - [ ] Fixing unreal-shimloader's detour hacks by detaching the process and DLL injecting something (or just make my own shimloader)
 - [ ] Switching to UEPseudo instead of Dumper-7 not only to make it game-agnostic but also just to have a better API in general
+- [ ] Fixing IsParentProcessAlive so I don't overpopulate the end user's filesystem with *oh so many* log files
 
 And I'm sure there's much much more I'm forgetting...
