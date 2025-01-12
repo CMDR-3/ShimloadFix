@@ -14,37 +14,28 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Source Files\SDK">
-      <UniqueIdentifier>{ecf71fc1-d760-4b79-8763-88fb81bee46d}</UniqueIdentifier>
+      <UniqueIdentifier>{63423844-74d4-456a-90cb-88304a3169f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\SDK\Engine_functions.cpp">
+    <ClCompile Include="..\include\SDK\Basic.cpp">
       <Filter>Source Files\SDK</Filter>
     </ClCompile>
     <ClCompile Include="..\include\SDK\CoreUObject_functions.cpp">
       <Filter>Source Files\SDK</Filter>
     </ClCompile>
-    <ClCompile Include="..\include\SDK\Basic.cpp">
-      <Filter>Source Files\SDK</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\SDK\VoidModActor_functions.cpp">
-      <Filter>Source Files\SDK</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\SDK\VoidModInstance_functions.cpp">
-      <Filter>Source Files\SDK</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\SDK\VoidMod_Base_functions.cpp">
+    <ClCompile Include="..\include\SDK\Engine_functions.cpp">
       <Filter>Source Files\SDK</Filter>
     </ClCompile>
     <ClCompile Include="..\include\SDK\MainGamemode_functions.cpp">
       <Filter>Source Files\SDK</Filter>
     </ClCompile>
+    <ClCompile Include="VoidModAPI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CoreMod.h">
+    <ClInclude Include="VoidModAPI.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

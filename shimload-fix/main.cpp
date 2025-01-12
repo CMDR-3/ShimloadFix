@@ -5,6 +5,7 @@
 #include "CoreMod.h"
 #include <fstream>
 #include <tlhelp32.h>
+#include <VoidModAPI.hpp>
 
 void LoadMod(const std::string& dllPath) {
     HMODULE hMod = LoadLibraryA(dllPath.c_str());
@@ -20,14 +21,35 @@ void LoadMod(const std::string& dllPath) {
         return;
     }
 
-    CoreMod* mod = CreateCoreMod();
+    CoreMod* mod{};
+    try
+    {
+        mod = CreateCoreMod();
+    }
+    catch (...)
+    {
+        std::cout << "Errored while creating new CoreMod. CoreMod Name: \"" << std::filesystem::path(dllPath).filename() << "\"\n";
+        goto exit;
+    }
+    
     if (mod) {
-        std::cout << "Mod loaded successfully!" << std::endl;
-        mod->LoadMod();
-        CoreModList.push_back(mod);
+        try
+        {
+            mod->OnLoadMod();
+            CoreModList.push_back(mod);
+            std::cout << "Mod loaded successfully!" << std::endl;
+            goto exit;
+        }
+        catch (...)
+        {
+            std::cout << "Errored while calling OnLoadMod from \"" << mod->QueryModName() << "\"" << std::endl;
+            goto exit;
+        }
     }
 
+exit:
     FreeLibrary(hMod);
+    return;
 }
 
 bool IsParentProcessAlive(DWORD parentProcessId) {
@@ -62,8 +84,23 @@ DWORD GetProcessIdByName(const std::wstring& processName) {
     return 0;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    FILE* f;
+    AllocConsole();
+    freopen_s(&f, "CONOUT$", "w", stdout);
+    freopen_s(&f, "CONIN$", "r", stdin);
+
+    /* ideally argc would only be 1, 
+    * but these fancy modloaders support
+    * profile names with spaces in them
+    */
+    if (argc <= 0)
+    {
+        std::cerr << "argc was 0, profile name incorrectly passed!" << std::endl;
+        return 1;
+    }
+
     std::wstring procName = L"VotV-Win64-Shipping.exe";
     DWORD procId = GetProcessIdByName(procName);
     if (procId == 0)
@@ -75,13 +112,30 @@ int main()
     std::string FileName = "ShimloadFix-Log-" + std::to_string(procId) + ".txt";
     std::ifstream fin(FileName);
 
+    VoidMod::Setup();
+
     if (fin) {
         std::cout << "ShimloadFix is already running, skipping." << std::endl;
+        /*
+        * this is probably from a level change as vm2 automatically re-loads mods on level change
+        * so call OnLevelChange and pass the new UWorld
+        */
+
+        for (auto& mod : CoreModList)
+        {
+            try
+            {
+                mod->OnLevelChange(SDK::UWorld::GetWorld());
+            }
+            catch (...)
+            {
+                std::cout << "Errored while changing level for mod \"" << mod->QueryModName() << "\"" << std::endl;
+                continue;
+            }
+        }
+
         return 0;
     }
-
-    FILE* f;
-    freopen_s(&f, FileName.c_str(), "w", stdout);
 
     std::cout << "Loading mods..." << std::endl;
 
@@ -89,6 +143,8 @@ int main()
     std::cout << "Loading from path \"" << modPath.string() << "\"" << std::endl;
     if (!std::filesystem::exists(modPath)) {
         std::cerr << "Directory does not exist: " << modPath << std::endl;
+        modPath = std::filesystem::current_path().parent_path();
+        std::cout << "Loading from path \"" << modPath.string() << "\"" << std::endl;
         return 1;
     }
     if (!std::filesystem::is_directory(modPath)) {
@@ -96,7 +152,7 @@ int main()
         return 1;
     }
 
-    for (const auto& entry : std::filesystem::directory_iterator(modPath)) {
+    for (const auto& entry : std::filesystem::recursive_directory_iterator(modPath)) {
         if (entry.is_regular_file() && entry.path().has_extension() && entry.path().extension() == ".dll") {
             std::cout << "Loading mod \"" << entry.path().filename().string() << "\"" << std::endl;
             LoadMod(entry.path().string());

@@ -6,10 +6,9 @@ using namespace SDK;
 
 class CoreMod
 {
-private:
-	
 public:
-	virtual void LoadMod() = 0;
+	virtual std::string QueryModName() = 0;
+	virtual void OnLoadMod() = 0;
 	virtual void OnLevelChange(UWorld* World) = 0;
 };
 using CreateCoreModFunc = CoreMod * (*)();

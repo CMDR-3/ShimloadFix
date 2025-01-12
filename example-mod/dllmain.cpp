@@ -3,15 +3,21 @@
 #include "Windows.h"
 
 #include "CoreMod.h"
+#include <VoidModAPI.hpp>
 
 class ExampleMod : public CoreMod
 {
-    void LoadMod() override {
+    std::string QueryModName() override {
+        return "Zeta's Example Mod";
+    }
+    
+    void OnLoadMod() override {
         std::cout << "ExampleMod loaded!" << std::endl;
     }
 
     void OnLevelChange(UWorld* World) override {
         std::cout << "Level changed!" << std::endl;
+        VoidMod::Hint("Changed into level \"" + World->GetName() + "\"!", SDK::Enum_notifyType::INFO);
     }
 };
 
