@@ -1,3 +1,8 @@
+# ⚠ DEPRECATED ⚠
+This GitHub page now only exists as a point of reference! or something, idk<br>
+point is, Shimloader is getting an actual fix (you can find the PR [here](https://github.com/thunderstore-io/unreal-shimloader/pull/5)) and you should use that instead.<br>
+For Thunderstore, we were given [shimpatch](https://thunderstore.io/c/voices-of-the-void/p/Moddy/shimpatch/) if you don't want to compile the fixed dwmapi yourself.
+
 # ShimloadFix
 A extension to [VoidMod2](https://thunderstore.io/c/voices-of-the-void/p/Gatohost/VoidMod/) and [unreal-shimloader](https://thunderstore.io/c/voices-of-the-void/p/Thunderstore/unreal_shimloader/) to support C++ code mods based on a SDK from Dumper-7.
 
